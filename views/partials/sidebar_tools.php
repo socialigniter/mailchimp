@@ -1,0 +1,1 @@
+<li><a class="sidebar_icon" href="<?= base_url() ?>home/mailchimp"><img src="<?= $this_module_assets ?>mailchimp_24.png"><span>MailChimp</span></a></li>

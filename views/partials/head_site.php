@@ -1,1 +1,0 @@
-<link rel="stylesheet" href="<?= $this_module_assets ?>mailchimp.css" type="text/css" media="screen" charset="utf-8" />

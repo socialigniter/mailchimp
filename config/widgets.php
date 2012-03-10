@@ -12,7 +12,7 @@
 */
 
 $config['mailchimp_widgets'][] = array(
-	'regions'	=> array('sidebar','content','leftbar'),
+	'regions'	=> array('sidebar','content','leftbar', 'wide'),
 	'widget'	=> array(
 		'module'	=> 'mailchimp',
 		'name'		=> 'Subscribe',

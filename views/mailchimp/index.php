@@ -1,12 +1,48 @@
-<h1>Module Template</h1>
+<h3>Mailing Lists</h3>
 
-<p>Welcome to your awesome module template</p>
+<form id="mailchimp_subscribe" name="mailchimp_subscribe">
+	<fieldset>
+		<legend>Join Our Mailing List</legend>
+		
+		<span id="response"></span>		
+		
+		<label>Name</label>
+		<input type="text" name="name" id="subscribe_name" />
+		
+		<label for="email" id="address-label">Email Address</label>
+		
+		<input type="text" name="email" id="subscribe_email" />
+		<input type="submit" name="submit" value="Join" class="btn" alt="Join" />
+		
+		<div id="no-spam">We'll never spam or give this address away</div>
+	</fieldset>
+</form>      
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#mailchimp_subscribe').submit(function(e)
+	{
+		e.preventDefault();
 
-<h3>Files</h3>
-<p>You can use dynamic content and database calls from the site controller for this module which is located at:</p>
+		// Update user interface
+		$('#response').html('Adding you to our mailing list…');
+		
+		// Data
+		var subscribe_data = $('#mailchimp_subscribe').serializeArray();
+	
+		$.ajax(
+		{
+			url			: base_url + 'api/mailchimp/subscribe',
+			type		: 'POST',
+			dataType	: 'json',
+			data		: subscribe_data,
+		  	success		: function(result)
+		  	{							  	
+				$('html, body').animate({scrollTop:0});
+				$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
+		  	}		
+		});			
 
-<pre>/application/modules/module_template/controllers/module_template.php</pre>
-
-<p>Here is the raw html code file for this module page. This file is located at:</p>
-
-<pre>/application/modules/module_template/views/module_template/index.php</pre>
+	});
+});
+</script>

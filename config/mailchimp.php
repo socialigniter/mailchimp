@@ -34,5 +34,3 @@ $config['mailchimp_boss_man_email'] = 'INVALID@example.com';
 
 //just used in xml-rpc examples
 $config['mailchimp_apiUrl'] 		= 'http://api.mailchimp.com/1.2/';
-    
-?>

@@ -14,10 +14,12 @@ class Mailchimp extends Site_Controller
 		$this->render();	
 	}
 
-	function view() 
+	/* Widgets */
+	function widgets_subscribe($widget_data) 
 	{		
-		// Basic Content Redirect	
-		$this->render();
+		$widget_data['posts'] = '';
+		
+		$this->load->view('widgets/subscribe', $widget_data);
 	}
 	
 }

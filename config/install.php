@@ -16,3 +16,5 @@
 $config['mailchimp_settings']['widgets'] 		= 'TRUE';
 $config['mailchimp_settings']['categories'] 	= 'TRUE';
 $config['mailchimp_settings']['enabled']		= 'TRUE';
+
+$config['mailchimp_settings']['api_key']		= '';

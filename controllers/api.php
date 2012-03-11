@@ -9,7 +9,7 @@ class Api extends Oauth_Controller
     	$this->form_validation->set_error_delimiters('', '');        
         
 		$this->load->config('mailchimp/mailchimp');
-		$this->load->library('mailchimp/MCAPI');        
+		$this->load->library('mailchimp/mailchimp_wrapper');        
 	}
 
     /* Install App */
@@ -42,20 +42,14 @@ class Api extends Oauth_Controller
 
 		// Passes Validation
 	    if ($this->form_validation->run() == true)
-	    {		
-			// grab an API Key from http://admin.mailchimp.com/account/api/
-			// grab your List's Unique Id by going to http://admin.mailchimp.com/lists/
-			// Click the "settings" link for the list - the Unique Id is at the bottom of that page.	
-			$api		= new MCAPI('12f5672d275c3569e7e4a5fb47721a13-us2'); 
-			$list_id	= 'a0b1b967d2';
+	    {
+			$list_id	= $this->input->post('list_id');
 			$email		= $this->input->post('email');
 			$merge_vars	= array(
-				'NAME'	=> $this->input->post('name'),
-				'FNAME' => 'Test', 
-				'LNAME'	=>'Account'
+				'FNAME' => $this->input->post('name')
 			);
 		
-			if ($api->listSubscribe($list_id, $email, $merge_vars) === true)
+			if ($this->mailchimp_wrapper->listSubscribe($list_id, $email, $merge_vars) === true)
 			{
 	            $message = array('status' => 'success', 'message' => 'Success! Check your email to confirm sign up.');
 				

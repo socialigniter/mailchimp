@@ -3,8 +3,14 @@
 <form id="mailchimp_subscribe" name="mailchimp_subscribe">
 	<fieldset>
 		<legend>Join Our Mailing List</legend>
-		
-		<span id="response"></span>		
+
+		<span id="response"></span>
+
+		<select name="list_id" id="list_id">
+			<?php foreach($lists['data'] as $list): ?>
+			<option value="<?= $list['id'] ?>"><?= $list['name'] ?></option>
+			<?php endforeach; ?>
+		</select>
 		
 		<label>Name</label>
 		<input type="text" name="name" id="subscribe_name" />

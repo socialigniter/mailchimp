@@ -9,7 +9,7 @@ class Api extends Oauth_Controller
     	$this->form_validation->set_error_delimiters('', '');        
         
 		$this->load->config('mailchimp/mailchimp');
-		$this->load->library('mailchimp/mailchimp_wrapper');        
+		$this->load->library('mailchimp/mailchimp_api');        
 	}
 
     /* Install App */
@@ -49,14 +49,14 @@ class Api extends Oauth_Controller
 				'FNAME' => $this->input->post('name')
 			);
 		
-			if ($this->mailchimp_wrapper->listSubscribe($list_id, $email, $merge_vars) === true)
+			if ($this->mailchimp_api->listSubscribe($list_id, $email, $merge_vars) === true)
 			{
 	            $message = array('status' => 'success', 'message' => 'Success! Check your email to confirm sign up.');
 				
 			}
 			else
 			{			
-	            $message = array('status' => 'error', 'message' => $api->errorMessage);			
+	            $message = array('status' => 'error', 'message' => $this->mailchimp_api->errorMessage);			
 			}
 		}
 		else

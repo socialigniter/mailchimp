@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mailchimp_wrapper
+class Mailchimp_api
 {
     var $version = "1.3";
     var $errorMessage;

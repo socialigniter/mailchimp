@@ -6,13 +6,13 @@ class Mailchimp extends Site_Controller
         parent::__construct();       
 
 		$this->load->config('mailchimp');
-		$this->load->library('mailchimp_wrapper');
+		$this->load->library('mailchimp_api');
 	}
 	
 	function index()
 	{	
 		$this->data['page_title']	= 'MailChimp';
-		$this->data['lists']		= $this->mailchimp_wrapper->lists();
+		$this->data['lists']		= $this->mailchimp_api->lists();
 
 		$this->render();	
 	}

@@ -1,26 +1,23 @@
-<h3>Mailing Lists</h3>
-
 <form id="mailchimp_subscribe" name="mailchimp_subscribe">
 	<fieldset>
 		<legend>Join Our Mailing List</legend>
-
-		<span id="response"></span>
-
+		
+		<label>Select List</label>
+		<p>
 		<select name="list_id" id="list_id">
 			<?php foreach($lists['data'] as $list): ?>
 			<option value="<?= $list['id'] ?>"><?= $list['name'] ?></option>
 			<?php endforeach; ?>
-		</select>
+		</select></p>
 		
 		<label>Name</label>
-		<input type="text" name="name" id="subscribe_name" />
+		<p><input type="text" name="name" id="subscribe_name" placeholder="John Smythe"></p>
 		
 		<label for="email" id="address-label">Email Address</label>
+		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
+
+		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
 		
-		<input type="text" name="email" id="subscribe_email" />
-		<input type="submit" name="submit" value="Join" class="btn" alt="Join" />
-		
-		<div id="no-spam">We'll never spam or give this address away</div>
 	</fieldset>
 </form>      
 <script type="text/javascript">
@@ -29,9 +26,6 @@ $(document).ready(function()
 	$('#mailchimp_subscribe').submit(function(e)
 	{
 		e.preventDefault();
-
-		// Update user interface
-		$('#response').html('Adding you to our mailing list…');
 		
 		// Data
 		var subscribe_data = $('#mailchimp_subscribe').serializeArray();

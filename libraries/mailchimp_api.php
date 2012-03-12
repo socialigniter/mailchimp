@@ -18,7 +18,7 @@ class Mailchimp_api
     function __construct()
     {
         $this->secure	= FALSE;
-        $this->apiUrl	= parse_url("http://api.mailchimp.com/" . $this->version . "/?output=php");
+        $this->apiUrl	= parse_url("http://api.mailchimp.com/" . $this->version . "/?output=json");
         $this->api_key	= config_item('mailchimp_api_key');
     }
 
@@ -2553,17 +2553,6 @@ class Mailchimp_api
         }
         
         if (ini_get("magic_quotes_runtime")) $response = stripslashes($response);
-
-        $serial = unserialize($response);
-        
-        if ($response && $serial === false)
-        {
-        	$response = array("error" => "Bad Response.  Got This: " . $response, "code" => "-99");
-        }
-        else
-        {
-        	$response = $serial;
-        }
         
         if ($errored && is_array($response) && isset($response["error"]))
         {

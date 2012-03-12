@@ -1,41 +1,49 @@
-<div class="widget_<?= $widget_region ?> widget_mailchimp_subscribe" id="widget_<?= $widget_id ?>">
-
-	<form action="" method="post" id="mailchimp_subscribe" name="mailchimp_subscribe">
+<form id="mailchimp_subscribe_widget" name="mailchimp_subscribe_widget">
 	<fieldset>
-	
-		<legend><span><?= $widget_title ?></span></legend>
-		<div class="indicate-required">* indicates required</div>
-		<div class="mc-field-group">
-			<label>Email Address <strong class="note-required">*</strong></label>
-			<input type="text" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-		</div>
+		<?php if ($widget_title) echo '<legend>'.$widget_title.'</legend>'; ?>		
+		<label>Select List</label>
+		<p>
+		<select name="list_id" id="list_id">
+			<?php foreach($lists->data as $list): ?>
+			<option value="<?= $list->id ?>"><?= $list->name ?></option>
+			<?php endforeach; ?>
+		</select></p>
+		
+		<label>Name</label>
+		<p><input type="text" name="name" id="subscribe_name" placeholder="John Smythe"></p>
+		
+		<label for="email" id="address-label">Email Address</label>
+		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
+		
+		<h4>Select Only What You Are Interested In</h4>
 
-		<div class="mc-field-group">
-			<label>Name </label>
-			<input type="text" value="" name="MMERGE3" class="" id="mce-MMERGE3">
-		</div>
-
-		<div class="mc-field-group">
-			<label class="input-group-label"><strong>Recommended </strong>Only choose <strong>ONE group</strong> to avoid double email newsletters...</label>
-		    <ul>
-		    	<li><input type="checkbox" value="1" name="group[1]" id="mce-group-1-0"><label>Portland Youth Programs</label></li>
-				<li><input type="checkbox" value="2" name="group[2]" id="mce-group-1-1"><label>Portland Adult Programs</label></li>
-			</ul>
-		</div>
-		<div id="mce-responses">
-			<div class="response" id="mce-error-response"></div>
-		</div>
-		<div><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn"></div>
-
-		<strong>Privacy Policy</strong> We absolutely hate spam. We will <strong>never, never, ever</strong> sell or giveaway your email. You can unsubscribe at anytime you feel like it.
-
-	</fieldset>	
-	</form>
-</div>
-
+		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
+		
+	</fieldset>
+</form>      
 <script type="text/javascript">
-$(document).ready( function($)
+$(document).ready(function()
 {
+	$('#mailchimp_subscribe_widget').submit(function(e)
+	{
+		e.preventDefault();
+		
+		// Data
+		var subscribe_data = $('#mailchimp_subscribe').serializeArray();
 	
-}
+		$.ajax(
+		{
+			url			: base_url + 'api/mailchimp/subscribe',
+			type		: 'POST',
+			dataType	: 'json',
+			data		: subscribe_data,
+		  	success		: function(result)
+		  	{							  	
+				$('html, body').animate({scrollTop:0});
+				$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
+		  	}		
+		});			
+
+	});
+});
 </script>

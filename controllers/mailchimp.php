@@ -13,7 +13,22 @@ class Mailchimp extends Site_Controller
 	{
 		$this->data['page_title']	= 'MailChimp';
 		$lists		= json_decode($this->mailchimp_api->lists());
-		$groups		= json_decode($this->mailchimp_api->listInterestGroupings($lists->data[0]->id));
+		$groups		= array();
+		
+		echo '<pre>';
+		//print_r($lists);
+
+		foreach ($lists->data as $list)
+		{
+			//echo $list->id.'<br>';
+			//echo 'dogs';
+			//print_r($list);
+			$groups[$list->id] = json_decode($this->mailchimp_api->listInterestGroupings($list->id));
+		}
+
+		print_r($groups);
+
+		die();
 
 		$this->data['lists']	= $lists;
 		$this->data['groups']	= $groups;

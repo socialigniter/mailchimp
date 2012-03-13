@@ -15,7 +15,7 @@
 		<label for="email" id="address-label">Email Address</label>
 		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
 		
-		<h4>Select Only What You Are Interested In</h4>
+		<h4><?= $widget_content ?></h4>
 
 		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
 		

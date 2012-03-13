@@ -17,11 +17,10 @@
 		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
 		
 		<h4>Select What You Are Interested In</h4>
-		<?php if ($groups): foreach ($groups as $group): ?>
-			<?php foreach($group->groups as $child_group): ?>
-				<p><input type="checkbox" value="<?= $child_group->bit ?>" name="group-<?= $group->id ?>-[<?= $child_group->bit ?>]" id="group-check-<?= $child_group->bit ?>"> <?= $child_group->name ?></p>
-			<?php endforeach; ?>
-		<?php endforeach; endif; ?>
+		
+		<pre>
+		<?php print_r($groups) ?>
+		</pre>
 
 		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
 		

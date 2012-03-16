@@ -8,21 +8,37 @@
 		<label for="email" id="address-label">Email Address</label>
 		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
 
-
-		<h4>Select What You Are Interested In</h4>
-		<?php foreach($lists->data as $list): ?>
-
-		<p><input type="checkbox" value="<?= $list->id ?>" name="list_id[]"> <?= $list->name ?></p>
-
-			<?php if ($groups): ?>
-			<?php foreach ($groups as $group_key => $group): if ($group): ?>
-			<div id="list_groups_<?= $group_key ?>">
-				<?php foreach($group->groups as $child_group): ?>
-					<p><input type="checkbox" value="<?= $child_group->bit ?>" name="group-<?= $group->id ?>-[<?= $child_group->bit ?>]" id="group-check-<?= $child_group->bit ?>"> <?= $child_group->name ?></p>
-				<?php endforeach; ?>
-			</div>
-			<?php endif; endforeach; endif; ?>	
-		
+		<h4>Select Your Areas Of Interest</h4>
+		<?php 
+		// Lists are for "separate" accounts
+		// Need to only show what is declared
+		foreach($lists->data as $list):
+			// Get Groups		
+			$groups = json_decode($this->mailchimp_api->listInterestGroupings($list->id));
+			// If Groups Do This
+			if ($groups):
+		?>
+			<input type="hidden" name="list_id[]" value="<?= $list->id ?>">
+			<p><strong><?= $list->name ?> - <?= $list->id ?></strong><br>
+			<?php
+				// Loop Groups
+				foreach ($groups as $group):
+ 					// Does Group Have Interests				
+					if ($group->groups):
+			?>
+					<input type="hidden" name="<?= $list->id ?>[]" value="<?= $group->id ?>">	
+					<?php foreach ($group->groups as $interest): ?>
+					<input type="checkbox" value="<?= $interest->name ?>" name="<?= $group->id ?>[]" class="subscribe_checkboxes"> <?= $interest->name ?><br>
+					<?php endforeach; ?>
+			<?php
+					endif; // End $group_parent->groups 
+				endforeach; // End $groups
+			?>
+			</p>
+			<?php else: // Has No Groups ?>
+				<p><strong><?= $list->name ?> - <?= $list->id ?></strong><br>
+				<input type="checkbox" value="<?= $list->id ?>" name="list_id[]" class="subscribe_checkboxes"> General</p>
+			<?php endif; ?>
 		<?php endforeach; ?>
 
 		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
@@ -46,9 +62,13 @@ $(document).ready(function()
 			dataType	: 'json',
 			data		: subscribe_data,
 		  	success		: function(result)
-		  	{							  	
+		  	{
+		  		$('#subscribe_name').val('');
+		  		$('#subscribe_email').val(''); 
+		  		$('.subscribe_checkboxes').attr('checked', false);
+
 				$('html, body').animate({scrollTop:0});
-				$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
+				$('#content_message').notify({scroll:true,status:result.status,message:result.message});								
 		  	}		
 		});			
 

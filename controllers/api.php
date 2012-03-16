@@ -44,55 +44,81 @@ class Api extends Oauth_Controller
 		// Passes Validation
 	    if ($this->form_validation->run() == true)
 	    {
-	    	$subscribed = FALSE;
-	    
-	    	// Check User Then Add
-        	$user = $this->social_auth->get_user('email', $this->input->post('email'));
-        	
-        	if (!$user)
-        	{
-        		$username			= url_username($this->input->post('name'), 'none', true);
-		    	$password			= random_string('unique', 16);
-		    	$additional_data 	= array(
-		    		'name'			=> $this->input->post('name'),
-		    		'image'			=> ''
-		    	);
-	
-		    	$user = $this->social_auth->register($username, $password, $email, $additional_data, config_item('default_group'));    		
-			}
+	    	$posted		= array();
+	    	$subscribed = array();
+	    	$interests	= FALSE;
+			$email		= $this->input->post('email');
 
-			// Loop Through Lists (requires list to be array)
-			// Should maybe refactor to allow for single list (in POST data as non array)	    
-	    	foreach ($this->input->post('list_id') as $list_id)
+	    	// Check User Then Add
+	    	if (config_item('mailchimp_create_user') == 'TRUE')
 	    	{
-				$list_id	= $list_id;
-				$email		= $this->input->post('email');
-				$merge_vars	= array(
-					'FNAME' => $this->input->post('name')
-				);
-			
-				$subscribed[$list_id] = $this->mailchimp_api->listSubscribe($list_id, $email, $merge_vars);	    		
+	        	$user = $this->social_auth->get_user('email', $this->input->post('email'));
+	        	
+	        	if (!$user)
+	        	{
+	        		$username			= url_username($this->input->post('name'), 'none', true);
+			    	$password			= random_string('unique', 16);
+			    	$additional_data 	= array(
+			    		'name'			=> $this->input->post('name'),
+			    		'image'			=> ''
+			    	);
+		
+			    	$user = $this->social_auth->register($username, $password, $email, $additional_data, config_item('default_group'));    		
+				}
+			}
+		
+			// Loop Through Lists
+		    foreach ($this->input->post('list_id') as $list_id)
+	    	{	    		
+				// List HAS Groups
+				if ($this->input->post($list_id))
+				{
+					$merge_vars	= array(
+						'FNAME' 	=> $this->input->post('name'),
+						'NAME'	=> $this->input->post('name'),
+						'GROUPINGS' => array()
+					);
+								
+					// Loop Groups
+					foreach ($this->input->post($list_id) as $group_id)
+					{
+						// Group HAS Interests
+						if ($this->input->post($group_id))
+						{	
+							// Build Interests
+							$interests = implode(',', $this->input->post($group_id));
+							
+							$merge_vars['GROUPINGS'][] = array('id' => $group_id, 'groups' => $interests);
+						}
+					}
+
+					if ($interests)
+					{
+						$subscribed[$list_id] = $this->mailchimp_api->listSubscribe($list_id, $email, $merge_vars);
+					}
+					else
+					{
+						// Have Error Returned
+						$subscribed[$list_id] = 'No Groups Selected, Do not submit';
+					}
+				}
+				else
+				{
+					$merge_vars	= array(
+						'FNAME' => $this->input->post('name'),
+						'NAME'	=> $this->input->post('name')					
+					);
+
+					$subscribed[$list_id] = $this->mailchimp_api->listSubscribe($list_id, $email, $merge_vars);			
+				}
+
+				// Docs http://apidocs.mailchimp.com/api/1.3/listsubscribe.func.php
+				$posted[$list_id] = array('email' => $email, 'merge_vars' => $merge_vars);    		
 	    	}
 
-/*	    	
-			$list_id	= $this->input->post('list_id');
-			$email		= $this->input->post('email');
-			$merge_vars	= array(
-				'FNAME' => $this->input->post('name')
-			);
-		
-			$subscribed = $this->mailchimp_api->listSubscribe($list_id, $email, $merge_vars);
-*/
-		
-			if ($subscribed)
-			{
-	            $message = array('status' => 'success', 'message' => 'Success! Check your email to confirm sign up.', 'subscribed' => $subscribed, 'user' => $user);
-				
-			}
-			else
-			{			
-	            $message = array('status' => 'error', 'message' => $this->mailchimp_api->errorMessage);			
-			}
+	        $message = array('status' => 'success', 'message' => 'Success! Check your email to confirm sign up.', 'posted' => $posted, 'subscribed' => $subscribed);
+
+	        //$message = array('status' => 'error', 'message' => $this->mailchimp_api->errorMessage);
 		}
 		else
 		{

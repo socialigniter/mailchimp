@@ -16,6 +16,32 @@
 
 	<input type="hidden" name="module" value="<?= $this_module ?>">
 
+</div>
+<span class="item_separator"></span>
+
+
+<div class="content_wrap_inner">		
+	
+	<h3>Lists</h3>
+	<p>Select Allowed Lists...</p>
+
+</div>
+<span class="item_separator"></span>
+
+
+<div class="content_wrap_inner">		
+	
+	<h3>Groups</h3>
+	<p>Allow selecting of MailChimp Groups <?= form_dropdown('allow_groups', config_item('yes_or_no'), $settings['mailchimp']['allow_groups']) ?></p>
+
+</div>
+<span class="item_separator"></span>
+
+
+<div class="content_wrap_inner">		
+	
+	<h3>Users</h3>
+	<p>Create User in <strong><?= $site_title ?></strong> <?= form_dropdown('create_user', config_item('yes_or_no'), $settings['mailchimp']['create_user']) ?></p>
 	<p><input type="submit" name="save" value="Save" /></p>
 
 </div>

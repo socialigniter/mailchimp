@@ -8,18 +8,17 @@
 		<label for="email" id="address-label">Email Address</label>
 		<p><input type="text" name="email" id="subscribe_email" placeholder="johnsmythe@gmail.com"></p>
 
-		<h4>Select Your Areas Of Interest</h4>
-		<?php 
+		<h4>Select Areas Of Interest</h4>
+		<?php
 		// Lists are for "separate" accounts
-		// Need to only show what is declared
 		foreach($lists->data as $list):
-			// Get Groups		
-			$groups = json_decode($this->mailchimp_api->listInterestGroupings($list->id));
+		if (in_array($list->id, json_decode(config_item('mailchimp_allowed_lists')))):			
+			if (config_item('mailchimp_allow_groups') == 'TRUE'):
 			// If Groups Do This
-			if ($groups):
+			if ($groups = json_decode($this->mailchimp_api->listInterestGroupings($list->id))):
 		?>
 			<input type="hidden" name="list_id[]" value="<?= $list->id ?>">
-			<p><strong><?= $list->name ?> - <?= $list->id ?></strong><br>
+			<p><strong><?= $list->name ?></strong><br>
 			<?php
 				// Loop Groups
 				foreach ($groups as $group):
@@ -36,10 +35,9 @@
 			?>
 			</p>
 			<?php else: // Has No Groups ?>
-				<p><strong><?= $list->name ?> - <?= $list->id ?></strong><br>
+				<p><strong><?= $list->name ?></strong><br>
 				<input type="checkbox" value="<?= $list->id ?>" name="list_id[]" class="subscribe_checkboxes"> General</p>
-			<?php endif; ?>
-		<?php endforeach; ?>
+		<?php endif; endif; endif; endforeach; ?>
 
 		<input type="submit" name="submit" value="Join" class="btn" alt="Join">
 		

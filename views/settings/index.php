@@ -23,7 +23,17 @@
 <div class="content_wrap_inner">		
 	
 	<h3>Lists</h3>
-	<p>Select Allowed Lists...</p>
+
+	<p>Click on lists to display on signup form</p>
+
+	<div id="picker_allowed_lists">
+
+	<?php $lists_count=0; if ($lists): foreach($lists->data as $list): $lists_count++; ?>
+		<div class="selectable <?= selectable_state($list->id, config_item('mailchimp_allowed_lists')) ?>" rel="<?= $list->id ?>"><?= $list->name ?></div>
+	<?php endforeach; endif; ?>
+		<div class="clear"></div>
+		<input type="hidden" data-allowed_total="<?= $lists_count ?>" name="allowed_lists" id="allowed_lists_selected" value='<?= config_item('mailchimp_allowed_lists') ?>'>	
+	</div>
 
 </div>
 <span class="item_separator"></span>
@@ -48,3 +58,16 @@
 </form>
 
 <?= $shared_ajax ?>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#picker_allowed_lists').selectify(
+	{
+		element : '#allowed_lists_selected',
+		trigger	: 'selectable',
+		waiting	: 'selectable_waiting',
+		clicked	: 'selectable_chosen',
+		limit	: $('#allowed_lists_selected').attr('data-allowed_total')
+	});
+});
+</script>

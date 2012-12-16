@@ -1,0 +1,12 @@
+{
+	"app":"mailchimp",
+	"name":"Mailchimp",
+	"created":"2012-12-15",
+	"updated":"2012-12-15",
+	"creator":"Brennan Novak",
+	"category":"publishing",	
+	"links":{
+		"default":"settings/mailchimp"
+	},
+	"launcher":"yes"
+}
